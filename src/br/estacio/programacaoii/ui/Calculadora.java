@@ -5,13 +5,17 @@
  */
 package br.estacio.programacaoii.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author aluno
  */
 public class Calculadora extends javax.swing.JFrame {
-    
-    private int resultado;
+
+    private double resultado;
+
     /**
      * Creates new form Calculadora
      */
@@ -65,7 +69,7 @@ public class Calculadora extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(input_operacao, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                .addComponent(input_operacao)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -73,7 +77,7 @@ public class Calculadora extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(input_operacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -186,8 +190,18 @@ public class Calculadora extends javax.swing.JFrame {
         });
 
         btn_0.setText("0");
+        btn_0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_0ActionPerformed(evt);
+            }
+        });
 
         btn_virgula.setText(",");
+        btn_virgula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_virgulaActionPerformed(evt);
+            }
+        });
 
         btn_igual.setText("=");
         btn_igual.addActionListener(new java.awt.event.ActionListener() {
@@ -268,7 +282,7 @@ public class Calculadora extends javax.swing.JFrame {
                     .addComponent(btn_0)
                     .addComponent(btn_virgula)
                     .addComponent(btn_igual))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -278,10 +292,8 @@ public class Calculadora extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -289,16 +301,16 @@ public class Calculadora extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_pontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pontoActionPerformed
-        // TODO add your handling code here:
+        this.addValues(".");
     }//GEN-LAST:event_btn_pontoActionPerformed
 
     private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
@@ -310,9 +322,9 @@ public class Calculadora extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_5ActionPerformed
 
     private void btn_acActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_acActionPerformed
-        
+
         this.input_operacao.setText("");
-        
+
     }//GEN-LAST:event_btn_acActionPerformed
 
     private void btn_offActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_offActionPerformed
@@ -362,17 +374,78 @@ public class Calculadora extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_maisActionPerformed
 
     private void btn_igualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_igualActionPerformed
-        this.addValues("=");
+        System.out.println(this.input_operacao.getText());
     }//GEN-LAST:event_btn_igualActionPerformed
 
-    private void addValues(String value){
+    private void calculo() {
+        List<Double> valores = new ArrayList<>();
+        List<Character> operadores = new ArrayList<>();
+        String formula = this.input_operacao.getText();
+        
+        for(int i=0; i<formula.length(); i++){
+            if(this.isOperador(formula.charAt(i))){
+                operadores.add(formula.charAt(i));
+            }else{
+                valores.add(Double.parseDouble(String.valueOf(formula.charAt(i))));
+            }
+        }
+        Double resultado = 0.0;
+        for(int i=0; i<valores.size()-1; i++){
+            Double valor1 = valores.get(i);
+            if(i>0){
+                valor1 = resultado;
+            }
+            Double valor2 = valores.get(i+1);
+            Character operador = operadores.get(i);
+            resultado=this.calcular(valor1, valor2, operador);
+        }
+        this.input_operacao.setText(String.valueOf(resultado));
+    }
+    
+    private Double calcular(Double valor1, Double valor2, Character operacao){
+        Double resultado = 0.0;
+        
+        switch(operacao){
+            case '+':
+                resultado=valor1+valor2;
+                break;
+            case '-':
+                resultado=valor1-valor2;
+                break;
+            case '*':
+                resultado=valor1*valor2;
+                break;
+            case '/':
+                resultado=valor1/valor2;
+                break;
+        }
+        return resultado;
+    }
+    
+    private boolean isOperador(char value){
+        if(value == '+' || value == '-' || value == '*' || value == '/'){
+            return true;
+        }
+        return false;
+    }
+
+    private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
+        this.addValues("0");
+    }//GEN-LAST:event_btn_0ActionPerformed
+
+    private void btn_virgulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_virgulaActionPerformed
+        this.addValues(",");
+    }//GEN-LAST:event_btn_virgulaActionPerformed
+
+    private void addValues(String value) {
         //Pega o texto do campo input
         String input = this.input_operacao.getText();
         //concatena com o novo valor
-        input+=value;
+        input += value;
         //adiciona o novo valor no campo input
         this.input_operacao.setText(input);
     }
+
     /**
      * @param args the command line arguments
      */
