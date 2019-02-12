@@ -399,7 +399,7 @@ public class Calculadora extends javax.swing.JFrame {
             Character operador = operadores.get(i);
             resultado=this.calcular(valor1, valor2, operador);
         }
-        this.input_operacao.setText(String.valueOf(resultado));
+        this.input_operacao.setText(String.valueOf(resultado)); 
     }
     
     private Double calcular(Double valor1, Double valor2, Character operacao){
